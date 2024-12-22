@@ -18,14 +18,11 @@ pub fn build(b: *std.Build) !void {
 
     const lib = b.addSharedLibrary(.{
         .name = "snake.zove.libretro",
-        // .root_source_file = b.path("../zove.libretro/src/libretro.zig"),
-        .target = target, // These won't have any effect, since they'll be overwritten
-        .optimize = optimize, //     along with .root_module in the next statement.
+        .root_module = b.dependency("zove.libretro", .{}).module("zove.libretro"),
     });
-    lib.root_module = b.dependency("zove.libretro", .{}).module("zove.libretro").*;
 
     lib.root_module.addAnonymousImport("main", .{
-        .imports = &.{.{ .name = "zove.libretro", .module = &lib.root_module }},
+        .imports = &.{.{ .name = "zove.libretro", .module = lib.root_module }},
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
